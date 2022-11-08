@@ -7,32 +7,17 @@
 
 - workspace_catkin 
     catkin_make
-    catkin_create_pkg map_pilot_scan tf roscpp rospy roslib rosbag std_msgs geometry_msgs sensor_msgs nav_msgs 
+    catkin_create_pkg ros2pix4d tf roscpp rospy roslib rosbag std_msgs geometry_msgs sensor_msgs 
     touch " script.py "
     sudo chmod u+x " script.py "
 
-- ssh -Y johanp@172.17.100.6
-    -Y para insterfaz grafica
-    
-    scp -r johanp@172.17.100.6:pwd-workstation pwd-yo
-
-- bash
-    bash ssh_Workstation.sh
-
-- ls -R
-    mkdir
-    mv "cambiar nombre" "nuevo nombre"
-    rm "eliminar archivos" 
-
 - Rosrun
-    source /home/avila/pix4d_ws/devel/setup.bash
+    source /home/avila/avila_ws/devel/setup.bash
 
     rosrun ros_to_pix4d ??.py
 
-    roslaunch ros_to_pix4d ROSToPix4D.launch 
-
 - evo
-    evo_traj tum trajectory_odom.txt  -p --plot_mode=xz
+    evo_traj tum trajectory_odom.txt -p --plot_mode=xz
     
 scp -r johanp@172.17.100.6:/home/johanp/KittiApeVsIndex /home/sirui/Pictures
 scp -r johanp@172.17.100.6:/home/johanp/KittiRpeVsIndex /home/sirui/Pictures

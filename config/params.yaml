@@ -6,10 +6,9 @@ ros2pix4d:
     cam: /dfm27uro135ml/cam/image_raw
 
   rosbag:
-    path: "/home/johanavila/johan_ws/src"
-    # name: "lote_2_nataima_arroz_2022-10-03-09-32-17"
-    name: "casona_7_2022-09-30-15-52-28"
-    # name: "alto_cruz_2022-10-08-12-53-19"
+    # path: "/home/johanavila/avila_ws/src"
+    path: "/home/avila/avila_ws/src"
+    name: "lote_2_nataima_arroz_2022-10-03-09-32-17"
 
   img:
     format: "jpg"

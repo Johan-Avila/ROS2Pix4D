@@ -17,20 +17,8 @@ https://www.youtube.com/watch?v=T-udub8ns4w
 -> http://docs.ros.org/en/diamondback/api/rosbag/html/c++/index.html
 -> https://www.ybliu.com/2020/07/ros-how-to-read-and-show-image-from-bag.html
 
-- bagpy
--> https://jmscslgroup.github.io/bagpy/bagpy_example.html
-
 - Ros_info
 -> https://gist.github.com/Alfonzzoj/db207b89d56f24d9d0b17ff93e091be8
-
-- yaml-cpp
--> https://stackoverflow.com/questions/62779771/how-to-link-library-correctly-in-cmake
--> https://github.com/ros-perception/image_common/issues/24
--> https://stackoverflow.com/questions/365155/parse-yaml-files-in-c
--> https://stackoverflow.com/questions/70072926/yaml-cpp-how-to-read-this-yaml-file-content-using-c-linux-using-yaml-cpp-v
-
-- utm
--> https://docs.obspy.org/tutorial/code_snippets/coordinate_conversions.html
 
 - pymap3d
 -> https://geospace-code.github.io/pymap3d/

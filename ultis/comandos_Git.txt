@@ -5,14 +5,14 @@
 	para cambiar de rama
 
 - git status 
-	para saber el estado de la rama actual (Cambios o no )
+	para saber el estado de la rama actual (Cambios o no)
 
 - git add .
 	agrega todo 
 
 - git checkout .
 
-- git commit -m "descripcion del cambio o creacion " 
+- git commit -m "descripcion del cambio o creacion" 
 
 - git commit -m "Actulizado" 
 

@@ -7,10 +7,14 @@ import os
 import time
 import yaml
 
+import cv2
+from cv_bridge import CvBridge, CvBridgeError
+
 
 class DataGPS:
 
-    def __init__(self):
+    def __init__(self, path_directory):
+        self.path_directory = path_directory
         self.stamp_nsec = []
         self.latitude = []
         self.longitude = []
@@ -22,8 +26,8 @@ class DataGPS:
         self.longitude.append(gps_ros.longitude)
         self.altitude.append(gps_ros.altitude)
 
-    def save(self, path_directory):
-        file = path_directory+"Data_GPS.txt"
+    def save(self):
+        file = self.path_directory+"Data_GPS.txt"
         N = len(self.stamp_nsec)
         with open(file, "w+") as f:
             f.write("stamp_nsec latitude longitude altitude\n")
@@ -36,7 +40,8 @@ class DataGPS:
 
 class DataIMU:
 
-    def __init__(self):
+    def __init__(self, path_directory):
+        self.path_directory = path_directory
         self.stamp_nsec = []
         self.qx = []
         self.qy = []
@@ -50,8 +55,8 @@ class DataIMU:
         self.qz.append(imu_ros.orientation.z)
         self.qw.append(imu_ros.orientation.w)
 
-    def save(self, path_directory):
-        file = path_directory+"Data_IMU.txt"
+    def save(self):
+        file = self.path_directory+"Data_IMU.txt"
         N = len(self.stamp_nsec)
         with open(file, "w+") as f:
             f.write("stamp_nsec qx qy qz qw\n")
@@ -65,14 +70,29 @@ class DataIMU:
 
 class DataImg:
 
-    def __init__(self):
+    def __init__(self, path_directory, path_directory_img):
+        self.path_directory = path_directory
+        self.path_directory_img = path_directory_img
+        self.cv_bridge = CvBridge()
         self.stamp_nsec = []
 
     def callback_img(self, img_ros):
-        self.stamp_nsec.append(img_ros.header.stamp.to_nsec())
+        stamp_nsec = img_ros.header.stamp.to_nsec()
+        self.stamp_nsec.append(stamp_nsec)
 
-    def save(self, path_directory):
-        file = path_directory+"Data_Img.txt"
+        path_img = ""
+        path_img += self.path_directory_img
+        path_img += str(stamp_nsec)
+        path_img += ".jpg"
+
+        try:
+            img = self.cv_bridge.imgmsg_to_cv2(img_ros, "passthrough")
+            cv2.imwrite(path_img, img)
+        except CvBridgeError:
+            pass
+
+    def save(self):
+        file = self.path_directory+"Data_Img.txt"
         N = len(self.stamp_nsec)
         with open(file, "w+") as f:
             f.write("stamp_nsec\n")
@@ -89,8 +109,13 @@ with open(path_file_params, 'r') as f:
     params = yaml.load(f, Loader=yaml.FullLoader)["ros2pix4d"]
 
 path_directory = path_ros2pix4d+"_"+params["rosbag"]["name"]+"/"
+path_directory_img = path_directory + "img/"
 try:
     os.mkdir(path_directory)
+except:
+    pass
+try:
+    os.mkdir(path_directory_img)
 except:
     pass
 print("\033[1;32m-> Rosbag2data.\033[0m")
@@ -112,9 +137,9 @@ data_topics.append(topic_gps)
 data_topics.append(topic_imu)
 data_topics.append(topic_cam)
 
-data_gps = DataGPS()
-data_imu = DataIMU()
-data_img = DataImg()
+data_gps = DataGPS(path_directory)
+data_imu = DataIMU(path_directory)
+data_img = DataImg(path_directory, path_directory_img)
 
 for topic_msg, msg, _ in data_rosbag.read_messages(topics=data_topics):
     if topic_msg == topic_gps:
@@ -128,9 +153,9 @@ data_rosbag.close()
 print("\033[1;32m-> Ok.\033[0m")
 
 print("\033[1;31m-> save_data.\033[0m")
-data_gps.save(path_directory)
-data_imu.save(path_directory)
-data_img.save(path_directory)
+data_gps.save()
+data_imu.save()
+data_img.save()
 print("\033[1;32m-> Ok.\033[0m")
 
 time_final = time.time()-time_tic
