@@ -14,3 +14,9 @@ pip install evo --upgrade --no-binary evo
 pip install pymap3d
 
 pip install pyyaml
+
+pip install matplotlib
+
+pip install numpy
+
+sudo apt install python-cv-bridge
