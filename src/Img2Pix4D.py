@@ -45,54 +45,41 @@ def dec2dms(coord, coord_type):
     return dms, dms_ref
 
 
+print("\033[1;32----------\033[0m")
 ros_Pack = rospkg.RosPack()
-path_MapPilotScan = ros_Pack.get_path('map_pilot_scan')
+path_ros2pix4d = ros_Pack.get_path('ros2pix4d')
 
-# path_example_img = path_MapPilotScan+"/example_img/DJI_0695.JPG"
-
-# print("example_img")
-# print()
-
-# example_img = pyexiv2.ImageMetadata(path_example_img)
-# example_img.read()
-
-# print("data Exif")
-# for x in example_img.exif_keys:
-#     print("->",
-#           x, " - ",
-#           example_img[x].value, " - ",
-#           type(example_img[x].value))
-# print()
-
-# print("data Xmp")
-# for x in example_img.xmp_keys:
-#     print("->",
-#           x, " - ",
-#           example_img[x].value, " - ",
-#           type(example_img[x].value))
-# print()
-
-pyexiv2.xmp.register_namespace('http://example.org/Camera/', 'Camera')
-
-path_file_params = path_MapPilotScan+"/config/params.yaml"
+path_file_params = path_ros2pix4d+"/config/params.yaml"
 with open(path_file_params, 'r') as f:
-    params = yaml.load(f, Loader=yaml.FullLoader)["map_pilot_scan"]
+    params = yaml.load(f, Loader=yaml.FullLoader)["ros2pix4d"]
 
-path_directory = path_MapPilotScan + "_"+params["rosbag"]["name"]+"/"
-
+path_directory = path_ros2pix4d+"_"+params["rosbag"]["name"]+"/"
 path_directory_img = path_directory + "img/"
-path_file_gps = path_directory + "Data_GPS.txt"
-path_file_odom = path_directory + "Data_Odom.txt"
+try:
+    os.mkdir(path_directory)
+except:
+    pass
+try:
+    os.mkdir(path_directory_img)
+except:
+    pass
+pyexiv2.xmp.register_namespace('http://example.org/Camera/', 'Camera')
+print("\033[1;32m-> Img2Pix4D.\033[0m")
 
-names_files_img = sorted(os.listdir(path_directory_img))
+print("\033[1;31m-> Read data.\033[0m")
+path_file_gps = path_directory + "Data_GPS.txt"
+path_file_imu = path_directory + "Data_IMU.txt"
 
 data_gps = pd.read_csv(path_file_gps, sep=" ", header=0)
 gps_stamp = np.array(data_gps["stamp_nsec"])
 gps_stamp = gps_stamp.astype(np.int64)
 
-data_odom = pd.read_csv(path_file_odom, sep=" ", header=0)
-odom_stamp = np.array(data_odom["stamp_nsec"])
-odom_stamp = odom_stamp.astype(np.int64)
+data_imu = pd.read_csv(path_file_imu, sep=" ", header=0)
+imu_stamp = np.array(data_imu["stamp_nsec"])
+imu_stamp = imu_stamp.astype(np.int64)
+
+names_files_img = sorted(os.listdir(path_directory_img))
+print("\033[1;32m-> Ok.\033[0m")
 
 N = len(names_files_img)
 bar_cont = 0
@@ -117,16 +104,16 @@ for name_file_img in names_files_img:
     altitude_tmp = fractions.Fraction(altitude_tmp, 1000)
     # print(altitude_tmp)
 
-    err_odom_stamp = np.abs(int(name_img)-odom_stamp)
-    err_odom_stamp_min = np.amin(err_odom_stamp)
-    err_odom_stamp_min_pose = err_odom_stamp == err_odom_stamp_min
+    err_imu_stamp = np.abs(int(name_img)-imu_stamp)
+    err_imu_stamp_min = np.amin(err_imu_stamp)
+    err_imu_stamp_min_pose = err_imu_stamp == err_imu_stamp_min
 
-    odom_tmp = data_odom[err_odom_stamp_min_pose]
+    imu_tmp = data_imu[err_imu_stamp_min_pose]
 
-    qx_tmp = float(odom_tmp["qx"])
-    qy_tmp = float(odom_tmp["qy"])
-    qz_tmp = float(odom_tmp["qz"])
-    qw_tmp = float(odom_tmp["qw"])
+    qx_tmp = float(imu_tmp["qx"])
+    qy_tmp = float(imu_tmp["qy"])
+    qz_tmp = float(imu_tmp["qz"])
+    qw_tmp = float(imu_tmp["qw"])
 
     rot = list(tf.transformations.euler_from_quaternion(
         (qx_tmp, qy_tmp, qz_tmp, qw_tmp)))

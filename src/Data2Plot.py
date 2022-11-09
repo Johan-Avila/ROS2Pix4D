@@ -1,17 +1,12 @@
 #!/usr/bin/python3
 
 import rospkg
-import rosbag
-import tf
 
 import os
-import time
 import yaml
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import open3d as o3d
-import pymap3d as pm
 
 
 print("\033[1;32----------\033[0m")
@@ -48,7 +43,6 @@ img_stamp = img_stamp.astype(np.int64)
 print("\033[1;32m-> Ok.\033[0m")
 
 print("\033[1;31m-> Plot.\033[0m")
-
 gps_stamp = gps_stamp - gps_stamp[0]
 imu_stamp = imu_stamp - imu_stamp[0]
 img_stamp = img_stamp - img_stamp[0]
@@ -61,5 +55,10 @@ img_ones = np.ones(img_stamp.shape[0])
 # plt.plot(imu_stamp[:1000], imu_ones[:1000], ".")
 # plt.plot(img_stamp[:1000], img_ones[:1000], ".")
 # plt.show()
+
+plt.plot(gps_stamp, gps_ones, ".")
+plt.plot(imu_stamp, imu_ones, ".")
+plt.plot(img_stamp, img_ones, ".")
+plt.show()
 
 print("\033[1;33----------\033[0m")
