@@ -63,6 +63,33 @@ try:
     os.mkdir(path_directory_img)
 except:
     pass
+
+# path_example_img = (
+#     ros_Pack.get_path('ros_to_pix4d') +
+#     "/example_img/DJI_20211203115723_0001.JPG")
+
+# print("example_img")
+# print()
+
+# example_img = pyexiv2.ImageMetadata(path_example_img)
+# example_img.read()
+
+# print("data Exif")
+# for x in example_img.exif_keys:
+#     print("->",
+#           x, " - ",
+#           example_img[x].value, " - ",
+#           type(example_img[x].value))
+# print()
+
+# print("data Xmp")
+# for x in example_img.xmp_keys:
+#     print("->",
+#           x, " - ",
+#           example_img[x].value, " - ",
+#           type(example_img[x].value))
+# print()
+
 pyexiv2.xmp.register_namespace('http://example.org/Camera/', 'Camera')
 print("\033[1;32m-> Img2Pix4D.\033[0m")
 
